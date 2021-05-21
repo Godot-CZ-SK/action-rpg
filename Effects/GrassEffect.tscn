@@ -32,6 +32,7 @@ animations = [ {
 } ]
 
 [node name="GrassEffect" type="AnimatedSprite"]
+modulate = Color( 1.5, 1.5, 1.5, 1 )
 frames = SubResource( 6 )
 animation = "Animate"
 centered = false

@@ -21,6 +21,7 @@ animations = [ {
 } ]
 
 [node name="HitEffect" type="AnimatedSprite"]
+modulate = Color( 1.5, 1.5, 1.5, 1 )
 frames = SubResource( 3 )
 animation = "Animate"
 offset = Vector2( 0, -8 )
