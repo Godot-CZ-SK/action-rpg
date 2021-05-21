@@ -488,11 +488,11 @@ points = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
 [sub_resource type="CapsuleShape2D" id=50]
 height = 12.0
 
-[sub_resource type="CapsuleShape2D" id=52]
+[sub_resource type="CapsuleShape2D" id=51]
 radius = 23.0
 height = 18.0
 
-[sub_resource type="CapsuleShape2D" id=51]
+[sub_resource type="CapsuleShape2D" id=52]
 radius = 9.0
 height = 14.0
 
@@ -613,7 +613,7 @@ collision_mask = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HealingFountain"]
 position = Vector2( 0, 7 )
 rotation = 1.5708
-shape = SubResource( 52 )
+shape = SubResource( 51 )
 
 [node name="Sprite" type="Sprite" parent="HealingFountain"]
 texture = ExtResource( 10 )
@@ -624,7 +624,7 @@ collision_mask = 18
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HealingFountain/StaticBody2D"]
 rotation = 1.5708
-shape = SubResource( 51 )
+shape = SubResource( 52 )
 
 [connection signal="body_entered" from="PortalLevel1" to="." method="_on_PortalLevel1_body_entered"]
 [connection signal="body_entered" from="HealingFountain" to="." method="_on_BloodFountain_body_entered"]
