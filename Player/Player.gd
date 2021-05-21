@@ -130,3 +130,6 @@ func die():
 	hurtbox.timer.set_paused(true)
 	hurtbox.collisionShape.set_deferred("disabled", true)
 	# collision_layer = 0
+
+
+#hi
