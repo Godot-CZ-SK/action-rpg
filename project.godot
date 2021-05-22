@@ -20,8 +20,8 @@ config/icon="res://icon.png"
 
 [autoload]
 
-PlayerStats="*res://Player/PlayerStats.tscn"
-HUD="*res://UI/HUD.tscn"
+PlayerStats="*res://core/PlayerStats.tscn"
+HUD="*res://core/HUD.tscn"
 
 [display]
 

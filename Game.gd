@@ -19,7 +19,7 @@ func change_level(new_level_name: String, new_position := Vector2(0, 0)):
 	free_level()
 	player.position = new_position
 	level_name = new_level_name
-	level = load("res://" + level_name + ".tscn").instance()
+	level = load("res://assets/levels/" + level_name + ".tscn").instance()
 	for node in level.get_children():
 		# Reparent level YSort nodes to World's YSort
 		if node is YSort:
