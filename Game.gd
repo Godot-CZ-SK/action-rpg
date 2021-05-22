@@ -25,7 +25,7 @@ func change_level(new_level_name: String, new_position := Vector2(0, 0)):
 		if node is YSort:
 			call_deferred("reparent", node)
 			#node.visible = true
-	get_node("Background").add_child(level)
+	get_node("Background").call_deferred("add_child", level)
 
 func free_level():
 	if level:
@@ -37,10 +37,3 @@ func free_level():
 func reparent(node: YSort):
 	node.get_parent().remove_child(node)
 	ysort.add_child(node)
-
-#func _process(delta):
-#	if Input.is_action_just_pressed("next_level"):
-#		if level_name == "Level2":
-#			change_level("Level1")
-#		else:
-#			change_level("Level2")

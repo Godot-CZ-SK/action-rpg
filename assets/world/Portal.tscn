@@ -1,0 +1,40 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://assets/world/altars/portal.png" type="Texture" id=1]
+[ext_resource path="res://assets/world/altars/portal_rotated.png" type="Texture" id=2]
+[ext_resource path="res://assets/world/altars/expired_portal.png" type="Texture" id=3]
+[ext_resource path="res://assets/world/Portal.gd" type="Script" id=4]
+
+[sub_resource type="CapsuleShape2D" id=1]
+radius = 5.87088
+height = 11.3756
+
+[sub_resource type="SpriteFrames" id=2]
+animations = [ {
+"frames": [ ExtResource( 1 ), ExtResource( 2 ) ],
+"loop": true,
+"name": "enabled",
+"speed": 7.0
+}, {
+"frames": [ ExtResource( 3 ) ],
+"loop": true,
+"name": "disabled",
+"speed": 5.0
+} ]
+
+[node name="Portal" type="Area2D"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource( 4 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource( 1 )
+
+[node name="Portal" type="AnimatedSprite" parent="."]
+position = Vector2( 0, -16 )
+frames = SubResource( 2 )
+animation = "disabled"
+playing = true
+
+[connection signal="body_entered" from="." to="." method="_on_Portal_body_entered"]
