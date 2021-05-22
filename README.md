@@ -7,7 +7,7 @@ Experimental RPG system...
 - combat: melee, ranged & magic
 - player stats & skills, running
 - inventory, weapon slots, items, drops...
-- NPC, dialogues, quests, rewards
+- NPC, dialogues, quests, active elements (levers, switches, doors...), rewards
 - multiplayer
 - game menus, HUD, settings, themes
 - save & load game
