@@ -27,8 +27,6 @@ assets/
 	ui/          - UI assets
 	world/       - assets for levels
 core/     - core scripts and scenes, autoloads...
-Game.tscn - main scene
-Game.gd   - main script
 ```
 
 # Game Objects
@@ -39,13 +37,6 @@ Game.gd   - main script
 - `HUD`
 - `LevelManager` with `change_level(level, position)`
 
-## Game.tscn & Game.gd
-Main scene accessible in GDScript with `get_tree().current_scene`. It contains a few important nodes.
-
-- `WorldEnvironment`
-- `Background` - current Level is attached here
-- `YSort` - autoloaded `Player` and all `YSort` nodes of current Level is moved here
-
 ## Levels
 Every Level (at `assets/levels/<LevelName>.tscn`) should have following main nodes:
 
@@ -53,6 +44,11 @@ Every Level (at `assets/levels/<LevelName>.tscn`) should have following main nod
 - `TileMap`s
 - `YSort` node (needed for Player to be attached here)
 - `CamLimits` with enabled **Editable Children** option to limit Cam borders by position of `TopLeft` and `BottomRight` (or Camera movement will be limited by limits of previous level or by Cam's default settings)
+
+## Level Nodes
+- Enemies (currently only Bat)
+- Portal
+- HealthFountain
 
 # Credits
 Initial fork from https://github.com/uheartbeast/youtube-tutorials. See [LICENSE](LICENSE).
