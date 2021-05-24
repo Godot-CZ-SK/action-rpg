@@ -2,7 +2,7 @@ tool
 extends Area2D
 
 export(bool) var active := false setget set_active
-export(String) var level := "Level1"
+export(String) var to_level := "Level1"
 export(Vector2) var coords := Vector2(0, 0)
 
 func is_active():
@@ -19,5 +19,4 @@ func _on_Portal_body_entered(body):
 	if not active:
 		return
 	var scene = get_tree().current_scene
-	#scene.change_level("Level2", Vector2(200, -120))
-	scene.change_level(level, coords)
+	LevelManager.change_level(to_level, coords)

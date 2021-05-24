@@ -31,6 +31,29 @@ Game.tscn - main scene
 Game.gd   - main script
 ```
 
+# Game Objects
+
+## AutoLoaded
+- `Cam` with Camera2D
+- `Player` (moved over scene tree by `init_in_level()`)
+- `HUD`
+- `LevelManager` with `change_level(level, position)`
+
+## Game.tscn & Game.gd
+Main scene accessible in GDScript with `get_tree().current_scene`. It contains a few important nodes.
+
+- `WorldEnvironment`
+- `Background` - current Level is attached here
+- `YSort` - autoloaded `Player` and all `YSort` nodes of current Level is moved here
+
+## Levels
+Every Level (at `assets/levels/<LevelName>.tscn`) should have following main nodes:
+
+- `Background` Sprite
+- `TileMap`s
+- `YSort` node (needed for Player to be attached here)
+- `CamLimits` with enabled **Editable Children** option to limit Cam borders by position of `TopLeft` and `BottomRight` (or Camera movement will be limited by limits of previous level or by Cam's default settings)
+
 # Credits
 Initial fork from https://github.com/uheartbeast/youtube-tutorials. See [LICENSE](LICENSE).
 

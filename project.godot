@@ -15,13 +15,17 @@ _global_script_class_icons={
 [application]
 
 config/name="Action RPG"
-run/main_scene="res://Game.tscn"
+run/main_scene="res://assets/levels/Level1.tscn"
+boot_splash/bg_color=Color( 0, 0, 0, 1 )
 config/icon="res://icon.png"
 
 [autoload]
 
+Cam="*res://core/Cam.tscn"
 PlayerStats="*res://core/PlayerStats.tscn"
+Player="*res://core/Player.tscn"
 HUD="*res://core/HUD.tscn"
+LevelManager="*res://core/LevelManager.gd"
 
 [display]
 

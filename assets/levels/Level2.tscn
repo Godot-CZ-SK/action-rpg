@@ -1,10 +1,11 @@
-[gd_scene load_steps=62 format=2]
+[gd_scene load_steps=63 format=2]
 
 [ext_resource path="res://assets/world/DirtTileset.png" type="Texture" id=1]
 [ext_resource path="res://assets/backgrounds/GrassBackground.png" type="Texture" id=2]
 [ext_resource path="res://assets/world/CliffTileset.png" type="Texture" id=3]
 [ext_resource path="res://assets/world/tree/Tree.tscn" type="PackedScene" id=4]
 [ext_resource path="res://assets/world/grass/Grass.tscn" type="PackedScene" id=5]
+[ext_resource path="res://core/CamLimits.tscn" type="PackedScene" id=6]
 [ext_resource path="res://assets/enemies/bat/Bat.tscn" type="PackedScene" id=7]
 [ext_resource path="res://assets/world/bush/Bush.tscn" type="PackedScene" id=8]
 [ext_resource path="res://assets/levels/Level2.gd" type="Script" id=9]
@@ -493,7 +494,7 @@ height = 18.0
 radius = 9.0
 height = 14.0
 
-[node name="Level2" type="Node2D"]
+[node name="Level" type="Node2D"]
 script = ExtResource( 9 )
 
 [node name="Background" type="Sprite" parent="."]
@@ -591,29 +592,39 @@ position = Vector2( -159.872, 151.273 )
 position = Vector2( -110.047, -120.591 )
 
 [node name="ToLevel1Center" parent="YSort" instance=ExtResource( 11 )]
-position = Vector2( 128, -160 )
+position = Vector2( 56, 148 )
 active = true
-coords = Vector2( 0, -100 )
+coords = Vector2( 0, 100 )
 
-[node name="HealingFountain" type="Area2D" parent="."]
+[node name="HealingFountain" type="Area2D" parent="YSort"]
 position = Vector2( 192, 71 )
 collision_layer = 0
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HealingFountain"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="YSort/HealingFountain"]
 position = Vector2( 0, 7 )
 rotation = 1.5708
 shape = SubResource( 51 )
 
-[node name="Sprite" type="Sprite" parent="HealingFountain"]
+[node name="Sprite" type="Sprite" parent="YSort/HealingFountain"]
 texture = ExtResource( 10 )
 
-[node name="StaticBody2D" type="StaticBody2D" parent="HealingFountain"]
+[node name="StaticBody2D" type="StaticBody2D" parent="YSort/HealingFountain"]
 position = Vector2( 0, 7 )
 collision_mask = 18
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HealingFountain/StaticBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="YSort/HealingFountain/StaticBody2D"]
 rotation = 1.5708
 shape = SubResource( 52 )
 
-[connection signal="body_entered" from="HealingFountain" to="." method="_on_BloodFountain_body_entered"]
+[node name="CamLimits" parent="." instance=ExtResource( 6 )]
+
+[node name="TopLeft" parent="CamLimits" index="0"]
+position = Vector2( -184.109, -246.735 )
+
+[node name="BottomRight" parent="CamLimits" index="1"]
+position = Vector2( 320.027, 249.567 )
+
+[connection signal="body_entered" from="YSort/HealingFountain" to="." method="_on_BloodFountain_body_entered"]
+
+[editable path="CamLimits"]

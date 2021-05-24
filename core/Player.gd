@@ -31,6 +31,18 @@ func _ready():
 	stats.connect("no_health", self, "die")
 	animationTree.active = true
 	swordHitbox.knockback_vector = roll_vector
+	# Add RemoteTransform2D and attach it's remote_path to Cam
+	var remoteTransform = RemoteTransform2D.new()
+	remoteTransform.name = str(remoteTransform.get_class())
+	remoteTransform.remote_path = "/root/Cam"
+	add_child(remoteTransform)
+	call_deferred("init_in_level")
+
+func init_in_level():
+	var ysort = get_tree().current_scene.get_node("YSort")
+	get_parent().remove_child(self)
+	ysort.add_child(self)
+	global_position = Vector2(0, 0)
 
 func _physics_process(delta):
 	match state:
@@ -122,14 +134,11 @@ func heal(amount):
 		stats.health += amount
 
 func die():
-#	queue_free()
+	#queue_free()
 	visible = false
 	state = DEAD
 
 	# Disable hurtbox
 	hurtbox.timer.set_paused(true)
 	hurtbox.collisionShape.set_deferred("disabled", true)
-	# collision_layer = 0
-
-
-#hi
+	#collision_layer = 0

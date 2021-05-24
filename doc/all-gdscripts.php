@@ -3,7 +3,7 @@ $outputFile = __DIR__ . '/all-gdscripts.md';
 
 chdir(__DIR__ . '/..');
 
-$output = "# GDScripts\n\n";
+$output = "# All GDScripts\n\n";
 
 $dirIterator = new RecursiveDirectoryIterator('.');
 $filterExtensions = ['gd'];

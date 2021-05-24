@@ -6,8 +6,8 @@
 [ext_resource path="res://assets/world/Portal.gd" type="Script" id=4]
 
 [sub_resource type="CapsuleShape2D" id=1]
-radius = 5.87088
-height = 11.3756
+radius = 11.1618
+height = 0.0
 
 [sub_resource type="SpriteFrames" id=2]
 animations = [ {
@@ -28,7 +28,7 @@ collision_mask = 2
 script = ExtResource( 4 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-rotation = 1.5708
+position = Vector2( 0, -5 )
 shape = SubResource( 1 )
 
 [node name="Portal" type="AnimatedSprite" parent="."]
