@@ -1,4 +1,4 @@
-# GDScripts
+# All GDScripts
 
 ## `core/HUD.gd`
 ```
@@ -11,6 +11,7 @@ var xp = 0 setget set_xp
 onready var heartUIFull = $VBoxContainer/Top/HealthUI/HeartUIFull
 onready var heartUIEmpty = $VBoxContainer/Top/HealthUI/HeartUIEmpty
 onready var xpLabel = $VBoxContainer/Top/XP
+onready var inventoryContainer = $VBoxContainer/Middle/CenterContainer
 # progress bars
 onready var health_bar = $VBoxContainer/Bottom/Health
 onready var mana_bar = $VBoxContainer/Bottom/Mana
@@ -42,6 +43,11 @@ func _ready():
 	PlayerStats.connect("health_changed", self, "set_hearts")
 	# warning-ignore:return_value_discarded
 	PlayerStats.connect("max_health_changed", self, "set_max_hearts")
+	inventoryContainer.visible = false
+
+func _physics_process(delta):
+	if Input.is_action_just_pressed("inventory"):
+		inventoryContainer.visible = !inventoryContainer.visible
 ```
 
 ## `core/Hitbox.gd`
@@ -131,11 +137,11 @@ export(Array, Resource) var items = [
 	null, null, null, null, null, null, null, null, null
 ]
 
-func set_item(key, item):
-	var previous = items[key]
+func put_item(key, item):
+	var picked = items[key]
 	items[key] = item
 	emit_signal("item_changed", [key])
-	return previous
+	return picked
 
 func swap_items(from_key, to_key):
 	var to_item = items[to_key]
@@ -143,11 +149,11 @@ func swap_items(from_key, to_key):
 	items[from_key] = to_item
 	emit_signal("item_changed", [from_key, to_key])
 
-func remove_item(key):
-	var previous = items[key]
+func pick_item(key):
+	var picked = items[key]
 	items[key] = null
 	emit_signal("item_changed", [key])
-	return previous
+	return picked
 ```
 
 ## `core/SoftCollision.gd`
@@ -168,19 +174,57 @@ func get_push_vector():
 	return push_vector
 ```
 
-## `core/Camera2D.gd`
+## `core/LevelManager.gd`
+```
+extends Node
+
+export var _levels_dir := "res://assets/levels"
+
+var level_name: String
+var level
+
+onready var ysort
+
+func _ready():
+	var root = get_tree().get_root()
+	level = root.get_child(root.get_child_count() - 1)
+
+func change_level(new_level_name: String, new_position = null):
+	level_name = new_level_name
+	call_deferred("_change_scene", _levels_dir + "/" + level_name + ".tscn", new_position)
+
+func _change_scene(path: String, new_position = null):
+	if level.get_filename() != path:
+		Player.get_parent().remove_child(Player)
+		# It is now safe to remove the current scene
+		level.free()
+		level = load(path).instance()
+		get_tree().get_root().add_child(level)
+		get_tree().set_current_scene(level)
+
+	if level.has_node("YSort"):
+		ysort = level.get_node("YSort")
+		ysort.add_child(Player)
+	else:
+		ysort = null
+
+	Player.global_position = new_position
+
+	if level.has_node("CamLimits"):
+		var top_left = level.get_node("CamLimits/TopLeft")
+		var bottom_right = level.get_node("CamLimits/BottomRight")
+		Cam.change_limits(top_left.position.x, top_left.position.y, bottom_right.position.x, bottom_right.position.y)
+```
+
+## `core/Cam.gd`
 ```
 extends Camera2D
 
-onready var topLeft = $Limits/TopLeft
-onready var bottomRight = $Limits/BottomRight
-
-func _ready():
-	limit_top = topLeft.position.y
-	limit_left = topLeft.position.x
-	limit_bottom = bottomRight.position.y
-	limit_right = bottomRight.position.x
-
+func change_limits(left, top, right, bottom):
+	limit_left = left
+	limit_top = top
+	limit_right = right
+	limit_bottom = bottom
 ```
 
 ## `core/SwordHitbox.gd`
@@ -234,6 +278,18 @@ func _ready():
 	stats.connect("no_health", self, "die")
 	animationTree.active = true
 	swordHitbox.knockback_vector = roll_vector
+	# Add RemoteTransform2D and attach it's remote_path to Cam
+	var remoteTransform = RemoteTransform2D.new()
+	remoteTransform.name = str(remoteTransform.get_class())
+	remoteTransform.remote_path = "/root/Cam"
+	add_child(remoteTransform)
+	call_deferred("init_in_level")
+
+func init_in_level():
+	var ysort = get_tree().current_scene.get_node("YSort")
+	get_parent().remove_child(self)
+	ysort.add_child(self)
+	global_position = Vector2(0, 0)
 
 func _physics_process(delta):
 	match state:
@@ -333,49 +389,6 @@ func die():
 	hurtbox.timer.set_paused(true)
 	hurtbox.collisionShape.set_deferred("disabled", true)
 	#collision_layer = 0
-```
-
-## `Game.gd`
-```
-extends Node2D
-
-onready var ysort = $YSort
-onready var player = $YSort/Player
-
-var level_name: String
-var level
-
-func _ready():
-#	level = preload("res://Level1.tscn").instance()
-	change_level("Level1")
-
-	#player = preload("res://Player/Player.tscn").instance()
-	#player.translate(Vector2(120,100))
-	#level.get_node("YSort").add_child(player)
-	#get_node("YSort").add_child(player)
-
-func change_level(new_level_name: String, new_position := Vector2(0, 0)):
-	free_level()
-	player.position = new_position
-	level_name = new_level_name
-	level = load("res://assets/levels/" + level_name + ".tscn").instance()
-	for node in level.get_children():
-		# Reparent level YSort nodes to World's YSort
-		if node is YSort:
-			call_deferred("reparent", node)
-			#node.visible = true
-	get_node("Background").call_deferred("add_child", level)
-
-func free_level():
-	if level:
-		level.queue_free()
-	for node in ysort.get_children():
-		if !node is KinematicBody2D:
-			node.queue_free()
-
-func reparent(node: YSort):
-	node.get_parent().remove_child(node)
-	ysort.add_child(node)
 ```
 
 ## `assets/enemies/WanderController.gd`
@@ -529,7 +542,7 @@ tool
 extends Area2D
 
 export(bool) var active := false setget set_active
-export(String) var level := "Level1"
+export(String) var to_level := "Level1"
 export(Vector2) var coords := Vector2(0, 0)
 
 func is_active():
@@ -546,8 +559,7 @@ func _on_Portal_body_entered(body):
 	if not active:
 		return
 	var scene = get_tree().current_scene
-	#scene.change_level("Level2", Vector2(200, -120))
-	scene.change_level(level, coords)
+	LevelManager.change_level(to_level, coords)
 ```
 
 ## `assets/world/grass/Grass.gd`
@@ -570,13 +582,8 @@ func _on_Hurtbox_area_entered(_area):
 ```
 extends Node2D
 
-onready var game = get_tree().current_scene
-
-func _ready():
-	print(game.player)
-
-func _on_PortalLevel2_body_entered(body):
-	game.change_level("Level2", Vector2(200, -120))
+#func _on_PortalLevel2_body_entered(body):
+#	LevelManager.change_level("Level2", Vector2(200, -120))
 ```
 
 ## `assets/levels/Level2.gd`
