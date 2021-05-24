@@ -22,7 +22,6 @@ config/icon="res://icon.png"
 [autoload]
 
 Cam="*res://core/Cam.tscn"
-PlayerStats="*res://core/PlayerStats.tscn"
 Player="*res://core/Player.tscn"
 HUD="*res://core/HUD.tscn"
 LevelManager="*res://core/LevelManager.gd"
@@ -116,4 +115,5 @@ resurrect={
 
 [rendering]
 
+environment/default_clear_color=Color( 0, 0, 0, 1 )
 environment/default_environment="res://default_env.tres"

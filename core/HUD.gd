@@ -31,14 +31,14 @@ func set_xp(value):
 	xpLabel.text = str(xp)
 
 func _ready():
-	self.max_hearts = PlayerStats.max_health
-	self.hearts = PlayerStats.health
-	health_bar.max_value = PlayerStats.max_health
-	health_bar.value = PlayerStats.health
+	self.max_hearts = Player.stats.max_health
+	self.hearts = Player.stats.health
+	health_bar.max_value = Player.stats.max_health
+	health_bar.value = Player.stats.health
 	# warning-ignore:return_value_discarded
-	PlayerStats.connect("health_changed", self, "set_hearts")
+	Player.stats.connect("health_changed", self, "set_hearts")
 	# warning-ignore:return_value_discarded
-	PlayerStats.connect("max_health_changed", self, "set_max_hearts")
+	Player.stats.connect("max_health_changed", self, "set_max_hearts")
 	inventoryContainer.visible = false
 
 func _physics_process(delta):
